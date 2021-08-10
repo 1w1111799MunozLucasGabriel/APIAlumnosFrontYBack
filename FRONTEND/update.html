@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--     IMPORT HOJAS PROPIAS DE ESTILO Y JAVSCRIPT -->
+<!--     <link rel="stylesheet" href="styles.css"> EN DESUSO EN PLANTILLA
+    <script src="script.js"></script> -->
+<!--     IMPORT BOOSTRAP CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>Sistema Alta Alumnos</title>
+</head>
+<body>
+<!-- CONTENIDO PRINCIPAL AQUI -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="index.html">Sistema Alumnos</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Alta Alumno (CREATE Y READ) </a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="update.html">Update y Delete Alumno</a>
+        </li>
+    </div>
+  </nav>
+
+
+
+<div class="row">
+    <div class="container-fluid bg-primary py-5">
+        <div class="container text-white">
+            <h1 class="display-3"><b>Bienvenidos</b></h1>
+            <p class="lead"> Ingresa tus datos</p>
+        </div>
+    </div>
+</div>
+<h1 class="display-3 text-center">Elige tu alumno a updatear</h1>
+<div class="row">
+    <div class="col-12 col-sm-12 sol-md-6 col-lg-6 mt-5">
+        <div class="form-group d-flex justify-content-center">
+            <label> Alumno </label>
+            <select name="alumno" id="txtAlumno">
+            </select>
+        </div>
+    </div>
+</div>
+<!-- FORM LOGIN -->
+<h1 class="display-3 text-center mt-2 bg-dark text-light">Alta Alumno</h1>
+<div class="container d-flex justify-content-center mt-5">
+<form>
+<div class="row">
+
+<div class="col-12 col-sm-12 sol-md-6 col-lg-6">
+    <div class="form-group">
+        <label> Nombre </label>
+        <input disabled type="text" class="form-control" id="txtNombre" placeholder="Ingrese su Nombre">
+    </div>
+</div>
+
+<div class="col-12 col-sm-12 sol-md-6 col-lg-6">
+    <div class="form-group">
+        <label> Apellido </label>
+        <input disabled type="text" class="form-control" id="txtApellido" placeholder="ingrese Apellido">
+    </div>
+</div>
+
+</div>
+
+<div class="row">
+    <div class="col-12 col-sm-12 sol-md-6 col-lg-6">
+        <div class="form-group">
+            <label> Curso </label>
+            <input type="text" class="form-control" id="txtCurso" placeholder="Ingrese su Curso">
+        </div>
+    </div>
+
+    <div class="col-12 col-sm-12 sol-md-6 col-lg-6 mt-5">
+        <div class="form-group">
+            <label> Sexo </label>
+            <select disabled name="sexo" id="txtSexo">
+            </select>
+        </div>
+    </div>
+
+    </div>
+
+</div>
+<div class="d-flex justify-content-center">
+    <button type="button" class="btn btn-primary m-2" id="btnUpdate">Update Alumno</button>
+    <button type="button" class="btn btn-primary m-2" id="btnDelete">Delete Alumno</button>
+</div>
+</form>
+</div>
+
+<!-- IMPORT FUNCIONALDIADES BOOSTRAP -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<!-- AXIOS CDN -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- SWAL -->
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</body>
+
+<script>
+
+
+    // GET SEXOS
+    $(document).ready(function () {
+        $.ajax({
+        url: "https://localhost:5001/Alumnos/ObtenerSexos",
+        type: "GET",
+        success: function (result) {
+            if(result.ok){
+                resultadoS = result.return;
+                cargarCombo(resultadoS);
+            } else 
+            {
+                swal(result.error);
+            }
+        },
+        error : function (error) {
+            swal("Problemas al conseguir datos de Sexos");
+        },
+    })
+    // carga combo
+    function cargarCombo(datos){
+    var html = "<option value=''>SELECCIONE</option>";
+    $("#txtSexo").append(html);
+    select = document.getElementById("txtSexo");
+    for (let i = 0; i < datos.length; i++) {
+        var option = document.createElement('option');
+        option.value = datos[i].sexoId;
+        option.text = datos[i].sexo1;
+        select.add(option);
+    }
+}
+
+// get alumnos
+$.ajax({
+        url: "https://localhost:5001/Alumnos/ObtenerAlumnos",
+        type: "GET",
+        success: function (result) {
+            if(result.ok){
+                resultadoS = result.return;
+                cargarComboAlumnos(resultadoS);
+            } else 
+            {
+                swal(result.error);
+            }
+        },
+        error : function (error) {
+            swal("Problemas al conseguir datos de Alumnos");
+        },
+    })
+    // carga combo alumnos
+    function cargarComboAlumnos(datos){
+    var html = "<option value=''>SELECCIONE</option>";
+    $("#txtAlumno").append(html);
+    select = document.getElementById("txtAlumno");
+    for (let i = 0; i < datos.length; i++) {
+        var option = document.createElement('option');
+        option.value = datos[i].alumnoId;
+        option.text = datos[i].nombre + ' '+datos[i].apellido;
+        select.add(option);
+    }
+}
+
+// cargar alumno por id
+$("#txtAlumno").change(function () {
+    let id = $("#txtAlumno").val();
+    $.ajax({
+        url: "https://localhost:5001/Alumnos/GetAlumnoId/"+id,
+        type: "GET",
+        dataType: 'JSON',
+        contentType:'application/json',
+        data: JSON.stringify(id),
+        success: function (result) {
+            if(result.ok){
+                swal("Datos traidos con exito");
+                $("#txtNombre").val(result.return.nombre);
+                $("#txtApellido").val(result.return.apellido);
+                $("#txtCurso").val(result.return.curso);
+                $("#txtSexo").val(result.return.sexoId);
+            } else  
+            {
+                swal(result.error);
+            }
+        },
+        error : function (error) {
+            swal("Problemas en el servidor");
+        },
+    })
+});
+ 
+    })
+    // Update
+    $("#btnUpdate").click(function () {
+    let id = $("#txtAlumno").val();
+    let curso = $("#txtCurso").val();
+    if (curso === "" ) {
+        swal("Ingrese los cambios requeridos");
+    } else {
+        updateAlumno(id,curso);
+    }
+});
+
+function updateAlumno(id,curso){
+    comando = {
+ "alumnoId": parseInt(id),
+  "curso": curso,
+    };
+
+    $.ajax({
+        url: "https://localhost:5001/Alumnos/UpdateAlumno",
+        type: "POST",
+        dataType: 'JSON',
+        contentType:'application/json',
+        data: JSON.stringify(comando),
+        success: function (result) {
+            if(result.ok){
+                swal("Actualizacion exitosa , sera redireccionado en breve");
+                // reload pagina
+                setTimeout(function(){ location.reload();}, 3000);
+            } else  
+            {
+                swal("Problema Server");
+            }
+        },
+        error : function (error) {
+            swal("Problemas en el servidor");
+        },
+    })
+    
+}
+
+// delete
+
+$("#btnDelete").click(function () {
+    let id = $("#txtAlumno").val();
+    if (id === "" ) {
+        swal("Seleccione el alumno a eliminar");
+    } else {
+        deleteAlumno(id);
+    }
+});
+
+function deleteAlumno(idAlumno) {
+    $.ajax({
+        url: "https://localhost:5001/Alumnos/DeleteAlumno/"+idAlumno,
+        type: "DELETE",
+        dataType: 'JSON',
+        contentType:'application/json',
+        data: JSON.stringify(idAlumno),
+        success: function (result) {
+                swal("Alumno Eliminado con exito, sera redireccionado en breve");
+                // reload pagina
+                setTimeout(function(){ location.reload();}, 3000);
+        },
+        error : function (error) {
+            swal("Problemas en el servidor");
+        },
+    })
+}
+</script>
+</html>

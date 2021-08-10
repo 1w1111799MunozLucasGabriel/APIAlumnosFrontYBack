@@ -1,0 +1,41 @@
+create database alumnospr3
+CREATE TABLE sexo (
+	sexo_id serial PRIMARY KEY,
+	sexo VARCHAR(20)		
+	);
+	
+	insert into sexo(sexo)
+	values ('hombre');
+		insert into sexo(sexo)
+	values ('mujer');
+		insert into sexo(sexo)
+	values ('otro');
+	
+	select * from sexo
+	
+	create table alumnos (
+	alumno_id serial PRIMARY KEY,
+	nombre varchar(50),
+	apellido varchar(50),
+	curso varchar(50),
+	sexo_id int,
+	FOREIGN KEY (sexo_id)
+	REFERENCES sexo (sexo_id)
+	);
+	
+	insert into alumnos(nombre,apellido,curso,sexo_id)
+	values ('lucas','munoz','2W1',1),
+	 ('maria','perez', '2W2', 2)
+
+-- Database: ejemploProg3
+
+-- DROP DATABASE "ejemploProg3";
+
+CREATE DATABASE "ejemploProg3"
+    WITH 
+    OWNER = prog3
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Spanish_Spain.1252'
+    LC_CTYPE = 'Spanish_Spain.1252'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;

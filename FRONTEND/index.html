@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--     IMPORT HOJAS PROPIAS DE ESTILO Y JAVSCRIPT -->
+    <!--     <link rel="stylesheet" href="styles.css"> EN DESUSO EN PLANTILLA
+    <script src="script.js"></script> -->
+    <!--     IMPORT BOOSTRAP CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <title>Sistema Alta Alumnos</title>
+</head>
+
+<body>
+    <!-- CONTENIDO PRINCIPAL AQUI -->
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Sistema Alumnos</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="index.html">Alta Alumno (CREATE Y READ) </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="update.html">Update y Delete Alumno</a>
+                </li>
+        </div>
+    </nav>
+
+    <div class="row">
+        <div class="container-fluid bg-primary py-5">
+            <div class="container text-white">
+                <h1 class="display-3"><b>Bienvenidos</b></h1>
+                <p class="lead"> Ingresa tus datos</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FORM LOGIN -->
+    <h1 class="display-3 text-center mt-2 bg-dark text-light">Alta Alumno</h1>
+    <div class="container d-flex justify-content-center mt-5">
+        <form>
+
+            <div class="row">
+
+                <div class="col-12 col-sm-12 sol-md-6 col-lg-6">
+                    <div class="form-group">
+                        <label> Nombre </label>
+                        <input type="text" class="form-control" id="txtNombre" placeholder="Ingrese su Nombre">
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-12 sol-md-6 col-lg-6">
+                    <div class="form-group">
+                        <label> Apellido </label>
+                        <input type="text" class="form-control" id="txtApellido" placeholder="ingrese Apellido">
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12 col-sm-12 sol-md-6 col-lg-6">
+                    <div class="form-group">
+                        <label> Curso </label>
+                        <input type="text" class="form-control" id="txtCurso" placeholder="Ingrese su Curso">
+                    </div>
+                </div>
+
+                <div class="col-12 col-sm-12 sol-md-6 col-lg-6 mt-5">
+                    <div class="form-group">
+                        <label> Sexo </label>
+                        <select name="sexo" id="txtSexo">
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+    </div>
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-primary" id="btnAlta">Alta Alumno</button>
+    </div>
+    </form>
+    </div>
+
+    <!-- IMPORT FUNCIONALDIADES BOOSTRAP -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js"
+        integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF"
+        crossorigin="anonymous"></script>
+    <!-- AXIOS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- SWAL -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<!-- // aca estaba el cierre del body -->
+
+<script>
+    // GET SEXOS
+    $(document).ready(function () {
+        $.ajax({
+            url: "https://localhost:5001/Alumnos/ObtenerSexos",
+            type: "GET",
+            success: function (result) {
+                if (result.ok) {
+                    resultadoS = result.return;
+                    cargarCombo(resultadoS);
+                } else {
+                    swal(result.error);
+                }
+            },
+            error: function (error) {
+                swal("Problemas al conseguir datos de Sexos");
+            },
+        })
+        // carga combo
+        function cargarCombo(datos) {
+            var html = "<option value=''>SELECCIONE</option>"; // si elvalue es vacio colocar seleccione
+            $("#txtSexo").append(html);
+            select = document.getElementById("txtSexo");
+            for (let i = 0; i < datos.length; i++) {
+                var option = document.createElement('option');
+                option.value = datos[i].sexoId; // ver en models como figura el campo int y el campo string de la columnja sexo
+                option.text = datos[i].sexo1;  // option.text xq es string, no int // ver en models como figura el campo int y el campo string de la columnja sexo
+                select.add(option);
+            }
+        }
+
+    })
+    // CREATE programamos el evento clickk del boton
+    $("#btnAlta").click(function () {
+        let nombre = $("#txtNombre").val();
+        let apellido = $("#txtApellido").val(); // pasa el valor del campo y lo asigna
+        let curso = $("#txtCurso").val();
+        let sexo = $("#txtSexo").val();
+        if (nombre === "" || apellido === "" || curso === "" || sexo === "") {
+            swal("Ingrese los datos requeridos");
+        } else {
+            altaAlumno(nombre, apellido, curso, sexo); // funcion q creamos nosotoros
+        }
+    });
+
+    function altaAlumno(nombre, apellido, curso, sexo) {  // usamos lo que diga el swagger como cuerpo, se relaciona con el comandoCrearAlumno
+        comando = {
+            "nombre": nombre,
+            "apellido": apellido,
+            "curso": curso,
+            "sexoId": parseInt(sexo),  // si esentero hay q hacerle parseInt x las dudas
+        };
+
+        $.ajax({
+            url: "https://localhost:5001/Alumnos/CrearAlumno",
+            type: "POST",
+            dataType: 'JSON',
+            contentType: 'application/json',
+            data: JSON.stringify(comando),
+            success: function (result) {
+                if (result.ok) {
+                    swal("Alta exitosa sera redireccionado en breve");
+                    // reload pagina
+                    setTimeout(function () { location.replace("http://127.0.0.1:5500/update.html"); }, 3000);
+                } else {
+                    swal(result.error);
+                }
+            },
+            error: function (error) {
+                swal("Problemas en el servidor");
+            },
+        })
+
+
+        //update 
+        // delete
+
+        //------------------
+
+        //------------------
+
+    }
+
+    //----------------------- esto es para cargar una tabla con los datos de los alumnos si tuvieramos una tabla a llenar en el front
+    // $(document).ready(function () {
+    //     $.ajax({
+    //         url: "https://localhost:5001/Usuario/Login",
+    //         type: "GET",
+    //         /*    dataType: 'JSON',  - ESTO SOLO SIRVE CUNADO SE ENVIA ALGO AL SERVER
+    //            contentType:'application/json', // esto va si o si
+    //            data: JSON.stringify(comando), // se hace json al Objeto comando para enviar al body y a la api */
+    //         success: function (result) { // codigo en exito  , el result es lo que devuelve la api (es como guardar el resultado en un array)
+    //             if (result.ok) {
+    //                 crearTabla(result.return);
+    //             } else {
+    //                 swal(result.error)
+    //             }
+    //         },
+    //         error: function (error) { // codigo en error
+    //             console.log(error)
+    //         },
+    //     });
+    // });
+
+    // function crearTabla(datos) {
+    //     for (var i = 0; i < datos.length; i++) {
+    //         var html = "<tr>";
+    //         html += "<td>" + datos[i].id + "</td>";
+    //         html += "<td>" + datos[i].nombre + "</td>";
+    //         html += "<td>" + datos[i].apellido + "</td>";
+
+    //         if (datos[i].soltero) {
+    //             html += "<td>" + "Si" + "</td>";
+    //         } else {
+    //             html += "<td>" + "No" + "</td>";
+    //         }
+    //         html += "</tr>";
+    //         $("#cuerpoTabla").append(html);
+    //     }
+    // }
+
+    // var usuario = localStorage.getItem("emailUsuario");
+    // swal("hola" +
+    //     usuario);
+        //-----------------------
+</script>
+</body>
+</html>
